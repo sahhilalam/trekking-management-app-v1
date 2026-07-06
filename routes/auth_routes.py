@@ -1,13 +1,12 @@
+from flask import render_template
+
 def auth_routes(app):
 
-    @app.route("/")
-    def home():
-        return "<h1>Trekking App</h1>"
-    
-    @app.route("/login")
+    @app.route("/", methods=["GET", "POST"])
+    @app.route("/login", methods=["GET", "POST"])
     def login():
-        return "Login Page"
+        return render_template("auth/login.html")
     
-    @app.route("/register")
+    @app.route("/register", methods=["GET", "POST"])
     def register():
-        return "Register Page"
+        return render_template("auth/register.html")

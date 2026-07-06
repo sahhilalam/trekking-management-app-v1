@@ -21,6 +21,10 @@ auth_routes(app)
 staff_routes(app)
 user_routes(app)
 
+@app.route("/test")
+def test():
+    return render_template("test.html")
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
