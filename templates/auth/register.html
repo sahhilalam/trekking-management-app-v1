@@ -21,6 +21,17 @@ Register
         <div class="login-box">
             <h2>Register</h2>
 
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for ctg, msg in messages %}
+                        <div class="alert alert-{{ ctg }} alert-dismissible fade show" role="alert">
+                            {{ msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <form action="" method="post">
  
                 <input class="form-control" name="name" type="text" placeholder="Name" required>

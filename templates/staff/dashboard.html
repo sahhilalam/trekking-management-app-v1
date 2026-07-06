@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}
+Staff Dashboard
+{% endblock title %}
+
+{% block content %}
+{{ session.get('name') }}
+{% endblock content %}
