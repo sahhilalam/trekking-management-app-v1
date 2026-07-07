@@ -5,35 +5,40 @@
 {% endblock styles %}
 
 {% block content %}
-
-<div class="login-page">
-    <div class="left-panel">
-        <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
-        <h1>Manage Treks</h1>
-        <h2>Empower Adventures</h2>
-        <p>A complete trekking management platform for managing treks, staff and users.</p>
+<div class="admin-page">
+    <div class="sidebar">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        </div> 
+        <a href="#">Treks</a>
+        <a href="#">Staffs</a>
+        <a href="#">Users</a>
+        <a href="#">Bookings</a>
+        <a href="#">Search</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
     </div>
-    <div class="right-panel">
-        <div class="login-box">
-            <h2>Login</h2>
-
+    <div class="content">
+        <h2>Trek Management</h2>
+        <hr>
+        <div class="add-trek">
             <form action="#" method="post">
+                <label for="name">Name</label>
+                <input class="form-control" type="text" id="name" name="trek_name" required>
 
-                <input class="form-control" type="email" id="email" placeholder="Email" required>
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" name="location" required>
 
-                <input class="form-control" type="password" id="password" placeholder="Password" required>
+                <label for="difficulty">Difficulty</label>
+                <select name="difficulty" id="difficulty" class="form-control" required>
+                    <option value="" disabled selected>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Hard">Hard</option>
+                </select>
 
-                <button class="login">Login</button>
-
+                
             </form>
-            
-            <p class="register">
-                Don't have an account?
-                <a href="/register">Register</a>
-            </p>
-
         </div>
     </div>
 </div>
-
 {% endblock content %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="sidebar">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        </div> 
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('treks') }}">Treks</a>
+        <a href="#">Staff</a>
+        <a href="#">Users</a>
+        <a href="#">Bookings</a>
+        <a href="#">Search</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="content">
+        {% block main_content %}
+        {% endblock main_content %}
+    </div>
+</div>
+{% endblock content %}

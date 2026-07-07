@@ -1,0 +1,67 @@
+.admin-page{
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar{
+    width: 15%;
+    background-color: rgb(8, 45, 8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: static;
+}
+
+.header{
+    height: 15%;
+    margin-bottom: 30px;
+}
+
+.header img{
+    height: 100%;
+}
+
+.sidebar a{
+    width: 80%;
+    height: 45px;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover{
+    background-color: rgb(40, 80, 11);
+}
+
+.content{
+    width: 85%;
+    margin: 25px;
+}
+
+.box-container{
+    display: flex;
+    justify-content: space-evenly;
+    height: 15%;
+    margin-top: 20px;
+}
+
+.box{
+    background-color: rgb(170, 202, 147);
+    border-radius: 5px;
+    width: 22%;
+    text-align: center;
+    padding-top: 20px;
+    box-shadow: 1px 1px 10px;
+}
+
+form label{
+    margin-top:15px;
+    font-weight:bold;
+}
+
+form{
+    width:60%;
+    margin: auto;
+}

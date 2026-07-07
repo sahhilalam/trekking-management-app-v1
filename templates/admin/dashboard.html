@@ -1,9 +1,31 @@
-{% extends "base.html" %}
+{% extends "admin/layout.html" %}
 
 {% block title %}
 Admin Dashboard
 {% endblock title %}
 
-{% block content %}
-{{ session.get('name') }}
-{% endblock content %}
+{% block main_content %}
+<h3>Welcome {{ session.get('name') }}!</h3>
+
+<hr>
+
+<div class="box-container">
+    <div class="box">
+        <h3>{{ total_treks }}</h3>
+        <p>Total Treks</p>
+    </div>
+    <div class="box">
+        <h3>{{ total_bookings }}</h3>
+        <p>Total Bookings</p>
+    </div>
+    <div class="box">
+        <h3>{{ total_users }}</h3>
+        <p>Total Users</p>
+    </div>
+    <div class="box">
+        <h3>{{ total_staffs }}</h3>
+        <p>Total Staff</p>
+    </div>
+</div>
+</div>
+{% endblock main_content %}

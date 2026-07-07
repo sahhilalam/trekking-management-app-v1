@@ -31,7 +31,7 @@ def auth_routes(app):
                         return redirect(url_for("admin_dashboard"))
                     elif existing_user.role == "Staff":
                         return redirect(url_for("staff_dashboard"))
-                    else:
+                    elif existing_user.role == "User":
                         return redirect(url_for("user_dashboard"))
             else:
                 flash("Wrong password!", "danger")

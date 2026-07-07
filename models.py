@@ -28,9 +28,10 @@ class Trek(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text)
+    image = db.Column(db.String(255))
     status = db.Column(Enum("Open", "Closed", "Completed"), nullable=False)
     
-    staff_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
 
     bookings = db.relationship("Booking", backref="trek")
 

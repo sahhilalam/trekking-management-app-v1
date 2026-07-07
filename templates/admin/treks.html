@@ -1,0 +1,11 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}
+Trek Management
+{% endblock title %}
+
+{% block main_content %}
+<h3>Trek Management</h3>
+<hr>
+<a href="{{ url_for('add_trek') }}">+ Add trek</a>
+{% endblock main_content %}
