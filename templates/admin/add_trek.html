@@ -7,79 +7,60 @@ Add Trek
 {% block main_content %}
 <h3>Add Trek</h3>
 <hr>
-<form action="" method="POST" enctype="multipart/form-data">
+<div class="add-trek">
+    
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for ctg, msg in messages %}
+                    <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="width: 700px; margin: auto;" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <form action="" method="post" enctype="multipart/form-data">
+        <label for="name">Trek Name</label>
+        <input class="form-control" type="text" id="name" name="trek_name" required>
 
-    <label>Trek Name</label>
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" name="location" required>
 
-    <input class="form-control" type="text" name="trek_name" required>
+        <label for="difficulty">Difficulty</label>
+        <select name="difficulty" id="difficulty" class="form-control" required>
+            <option value="" disabled selected>Select difficulty</option>
+            <option value="Easy">Easy</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Hard">Hard</option>
+        </select>
 
-    <label>Location</label>
+        <label for="duration">Duration (in days)</label>
+        <input type="number" class="form-control" id="duration" name="duration" min="1" required>
 
-    <input class="form-control" type="text" name="location" required>
+        <label for="slots">Available slots</label>
+        <input type="number" class="form-control" id="slots" name="available_slots" min="1" required>
 
-    <label>Difficulty</label>
+        <label for="start_date">Start Date</label>
+        <input type="date" name="start_date" id="start_date" class="form-control" required>
 
-    <select class="form-control" name="difficulty" required>
+        <label for="end_date">End Date</label>
+        <input type="date" name="end_date" id="end_date" class="form-control" required>
 
-        <option value="Easy">Easy</option>
+        <label for="status">Status</label>
+        <select class="form-control" name="status" id="status" required>
+            <option value="" selected disabled>Select status</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+            <option value="Completed">Completed</option>
+        </select>
 
-        <option value="Moderate">Moderate</option>
+        <label for="description">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="5"></textarea>
 
-        <option value="Hard">Hard</option>
+        <label for="image">Trek image (optional)</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*">
 
-    </select>
-
-    <label>Duration (Days)</label>
-
-    <input class="form-control" type="number" name="duration" min="1" required>
-
-    <label>Available Slots</label>
-
-    <input class="form-control" type="number" name="available_slots" min="1" required>
-
-    <label>Start Date</label>
-
-    <input class="form-control" type="date" name="start_date" required>
-
-    <label>End Date</label>
-
-    <input class="form-control" type="date" name="end_date" required>
-
-    <label>Status</label>
-
-    <select class="form-control" name="status" required>
-
-        <option value="Open">Open</option>
-
-        <option value="Closed">Closed</option>
-
-        <option value="Completed">Completed</option>
-
-    </select>
-
-    <label>Description</label>
-
-    <textarea class="form-control"
-
-              rows="5"
-
-              name="description"></textarea>
-
-    <label>Trek Image (Optional)</label>
-
-    <input class="form-control"
-
-           type="file"
-
-           name="image"
-
-           accept="image/*">
-
-    <button class="btn btn-success mt-3">
-
-        Create Trek
-
-    </button>
-
-</form>
+        <button type="submit" class="submit form-control">Create trek</button>
+    </form>
+</div>
 {% endblock main_content %}

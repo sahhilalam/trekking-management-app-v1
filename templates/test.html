@@ -9,7 +9,7 @@
     <div class="sidebar">
         <div class="header">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
-        </div> 
+        </div>
         <a href="#">Treks</a>
         <a href="#">Staffs</a>
         <a href="#">Users</a>
@@ -20,24 +20,63 @@
     <div class="content">
         <h2>Trek Management</h2>
         <hr>
-        <div class="add-trek">
-            <form action="#" method="post">
-                <label for="name">Name</label>
-                <input class="form-control" type="text" id="name" name="trek_name" required>
+        <a href="{{ url_for('add_trek') }}">
+            <button
+                style="border-radius: 5px; background-color: rgb(8, 45, 8); color: white; width: 100px; height: 40px;">+
+                Add Trek</button>
+        </a>
 
-                <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" name="location" required>
+        <div class="trek-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Trek Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Assigned staff</th>
+                        <th>Slots</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if treks %}
+                        {% for trek in treks %}
+                            <tr>
+                                <td>
+                                    {% if trek.image %}
+                                    <img src="{{ url_for('static', filename='uploads/treks/' + trek.image) }}" width="80" height="60">
+                                    {% else %}
+                                        No image
+                                    {% endif %}
+                                </td>
+                                <td>{{ trek.trek_name }}</td>
+                                <td>{{ trek.location }}</td>
+                                <td>{{ trek.difficulty }}</td>
+                                <td>
+                                    {% if trek.manager %}
+                                        {{ trek.manager.name }}
+                                    {% else %}
+                                        Not Assigned
+                                    {% endif %}
+                                </td>
+                                <td>{{ trek.available_slots }}</td>
+                                <td>{{ trek.status }}</td>
+                                <td>
+                                    <a href="#">
+                                        <button class="edit">Edit</button>
+                                    </a>
 
-                <label for="difficulty">Difficulty</label>
-                <select name="difficulty" id="difficulty" class="form-control" required>
-                    <option value="" disabled selected>Select difficulty</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Moderate">Moderate</option>
-                    <option value="Hard">Hard</option>
-                </select>
-
-                
-            </form>
+                                    <a href="#">
+                                        <button class="delete">Delete</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

@@ -9,7 +9,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: static;
 }
 
 .header{
@@ -32,7 +31,7 @@
 }
 
 .sidebar a:hover{
-    background-color: rgb(40, 80, 11);
+    background-color: rgb(30, 75, 30);
 }
 
 .content{
@@ -40,10 +39,14 @@
     margin: 25px;
 }
 
+.content button:hover{
+    box-shadow: 1px 1px 20px rgba(0,0,0,0.6);
+}
+
 .box-container{
     display: flex;
     justify-content: space-evenly;
-    height: 15%;
+    height: 10%;
     margin-top: 20px;
 }
 
@@ -52,16 +55,92 @@
     border-radius: 5px;
     width: 22%;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 35px;
     box-shadow: 1px 1px 10px;
 }
 
-form label{
-    margin-top:15px;
-    font-weight:bold;
+.add-trek{
+    width: 800px;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px;
+    padding-top: 25px;
+    padding-bottom: 40px;
 }
 
-form{
-    width:60%;
+.add-trek form{
+    padding-top: 20px;
+    width: 600px;
     margin: auto;
+}
+
+.add-trek .form-control{
+    margin-bottom: 15px;
+}
+
+.add-trek label{
+    font-weight: bold;
+}
+
+.add-trek .submit{
+    color: white;
+    background-color: rgb(8, 45, 8);
+    font-weight: bold;
+    border: none;
+}
+
+.trek-table{
+    margin-top: 15px;
+}
+
+.trek-table table{
+    min-width: 100%;
+    background-color: black;
+    box-shadow: 1px 1px 10px;
+}
+
+.trek-table thead{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    height: 40px;
+}
+
+.trek-table tbody{
+    background-color: rgb(170, 202, 147);
+}
+
+.trek-table th{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.trek-table td{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.trek-table img{
+    object-fit: cover;
+    border-radius:5px;
+}
+
+.trek-table .edit{
+    background-color: rgb(8, 45, 8); 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}
+
+.trek-table .delete{
+    background-color: red; 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}
+
+.trek-table tbody tr:hover{
+    background-color: rgb(150, 185, 130);
 }

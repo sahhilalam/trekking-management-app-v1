@@ -14,6 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER")
 db.init_app(app)
 
 admin_routes(app)
@@ -23,7 +24,8 @@ user_routes(app)
 
 @app.route("/test")
 def test():
-    return render_template("test.html")
+    treks = Trek.query.all()
+    return render_template("test.html", treks=treks)
 
 if __name__ == "__main__":
     with app.app_context():

@@ -1,6 +1,6 @@
 .admin-page{
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .sidebar{
@@ -39,3 +39,51 @@
     margin: 25px;
 }
 
+.content button:hover{
+    box-shadow: 1px 1px 20px rgba(0,0,0,0.6);
+}
+
+.trek-table{
+    margin-top: 15px;
+}
+
+.trek-table table{
+    min-width: 1100px;
+    background-color: black;
+}
+
+.trek-table thead{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    height: 40px;
+}
+
+.trek-table tbody{
+    background-color: rgb(170, 202, 147);
+}
+
+.trek-table th{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.trek-table td{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.trek-table .edit{
+    background-color: rgb(8, 45, 8); 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}
+
+.trek-table .delete{
+    background-color: red; 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}

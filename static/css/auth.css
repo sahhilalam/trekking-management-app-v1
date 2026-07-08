@@ -51,11 +51,14 @@
 }
 
 .submit{
-    width: 100%;
     height: 50px;
     background-color: rgb(8, 45, 8);
-    border-radius: 7px;
     color: whitesmoke;
+    border: none;
+}
+
+.submit:hover{
+    box-shadow: 1px 1px 20px rgba(0,0,0,0.6);
 }
 
 .exist{
