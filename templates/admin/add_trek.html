@@ -26,6 +26,16 @@ Add Trek
         <label for="location">Location</label>
         <input type="text" class="form-control" id="location" name="location" required>
 
+        <label for="staff">Assigned staff</label>
+        <select name="staff_id" id="staff" class="form-control">
+            <option value="" selected>Not assigned</option>
+            {% if approved_staff %}
+            {% for staff in approved_staff %}
+            <option value="{{ staff.user_id }}">{{ staff.name }} ({{ staff.email }})</option>
+            {% endfor %}
+            {% endif %}
+        </select>
+
         <label for="difficulty">Difficulty</label>
         <select name="difficulty" id="difficulty" class="form-control" required>
             <option value="" disabled selected>Select difficulty</option>

@@ -1,0 +1,84 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}
+Edit Trek
+{% endblock title %}
+
+{% block main_content %}
+<h3>Edit Trek</h3>
+<hr>
+<div class="add-trek">
+    
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for ctg, msg in messages %}
+                    <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="width: 700px; margin: auto;" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% if trek.image %}
+        <img src="{{ url_for('static', filename='uploads/treks/' + trek.image) }}" width="100%" style="border-radius: 8px;">
+        <br>
+        <br>
+        {% endif %}
+
+        <label for="name">Trek Name</label>
+        <input class="form-control" type="text" id="name" name="trek_name" value="{{ trek.trek_name }}" required>
+
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" name="location" value="{{ trek.location }}" required>
+
+        <label for="staff">Assigned staff</label>
+        <select name="staff_id" id="staff" class="form-control">
+            <option value="">Not assigned</option>
+            {% if approved_staff %}
+            {% for staff in approved_staff %}
+            <option value="{{ staff.user_id }}" {% if trek.staff_id==staff.user_id %} selected {% endif %}>{{ staff.name }} ({{ staff.email }})</option>
+            {% endfor %}
+            {% endif %}
+        </select>
+
+        <label for="difficulty">Difficulty</label>
+        <select name="difficulty" id="difficulty" class="form-control" required>
+            <option value="Easy" {% if trek.difficulty=="Easy" %}selected{% endif %}>Easy</option>
+            <option value="Moderate" {% if trek.difficulty=="Moderate" %}selected{% endif %}>Moderate</option>
+            <option value="Hard" {% if trek.difficulty=="Hard" %}selected{% endif %}>Hard</option>
+        </select>
+
+        <label for="duration">Duration (in days)</label>
+        <input type="number" class="form-control" id="duration" name="duration" min="1" value="{{ trek.duration }}" required>
+
+        <label for="slots">Available slots</label>
+        <input type="number" class="form-control" id="slots" name="available_slots" min="1" value="{{ trek.available_slots }}" required>
+
+        <label for="start_date">Start Date</label>
+        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ trek.start_date }}" required>
+
+        <label for="end_date">End Date</label>
+        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ trek.end_date }}" required>
+
+        <label for="status">Status</label>
+        <select class="form-control" name="status" id="status" required>
+            <option value="Open" {% if trek.status=="Open" %}selected{% endif %}>Open</option>
+            <option value="Closed" {% if trek.status=="Closed" %}selected{% endif %}>Closed</option>
+            <option value="Completed" {% if trek.status=="Completed" %}selected{% endif %}>Completed</option>
+        </select>
+
+        <label for="description">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="5">{{ trek.description }}</textarea>
+
+        <label for="image">New trek image (optional)</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*">
+
+        <button type="submit" class="submit form-control">Update trek</button>
+
+        <a href="{{ url_for('treks') }}" style="text-decoration: none;">
+            <button type="button" class="form-control" style="font-weight: bold;">Cancel</button>
+        </a>
+    </form>
+</div>
+{% endblock main_content %}
