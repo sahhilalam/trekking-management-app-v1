@@ -92,7 +92,7 @@ def admin_routes(app):
                 flash("Invalid difficulty!", "danger")
                 return redirect(url_for("add_trek"))
 
-            if status not in ["Open", "Closed", "Completed"]:
+            if status not in ["Pending", "Approved", "Open", "Closed", "Completed"]:
                 flash("Invalid status!", "danger")
                 return redirect(url_for("add_trek"))
             
@@ -215,7 +215,7 @@ def admin_routes(app):
                 flash("Invalid difficulty!", "danger")
                 return redirect(url_for("edit_trek", trek_id=trek_id))
 
-            if status not in ["Open", "Closed", "Completed"]:
+            if status not in ["Pending", "Approved", "Open", "Closed", "Completed"]:
                 flash("Invalid status!", "danger")
                 return redirect(url_for("edit_trek", trek_id=trek_id))
             
@@ -263,3 +263,201 @@ def admin_routes(app):
             return redirect(url_for("treks"))
         
         return render_template("admin/edit_trek.html", trek=trek, approved_staff=approved_staff)
+    
+
+    @app.route("/admin/staff")
+    def staff():
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        status = request.args.get("status")
+        search = request.args.get("search")
+
+        query = User.query.filter_by(role="Staff")
+
+        if status in ["Approved", "Pending", "Blacklisted"]:
+            query = query.filter_by(account_status=status)
+        
+        if search:
+            query = query.filter(or_(
+                User.name.ilike(f"%{search}%"),
+                User.email.ilike(f"%{search}%")
+            ))
+        
+        staff = query.all()
+
+        total = User.query.filter_by(role="Staff").count()
+        approved = User.query.filter_by(role="Staff", account_status="Approved").count()
+        pending = User.query.filter_by(role="Staff", account_status="Pending").count()
+        blacklisted = User.query.filter_by(role="Staff", account_status="Blacklisted").count()
+
+        return render_template("admin/staff.html",
+                               staff=staff,
+                               total=total,
+                               approved=approved,
+                               pending=pending,
+                               blacklisted=blacklisted)
+    
+
+    @app.route("/admin/staff/approve/<int:user_id>")
+    def approve_staff(user_id):
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=user_id).first()
+        if not staff:
+            flash("No staff found!", "danger")
+            return redirect(url_for("staff"))
+        
+        if staff.role != "Staff":
+            flash("Invalid staff!", "danger")
+            return redirect(url_for("staff"))
+        
+        if staff.account_status == "Approved":
+            flash("Staff is already approved!", "warning")
+            return redirect(url_for("staff"))
+        
+        staff.account_status = "Approved"
+        db.session.commit()
+        flash("Staff approved successfully!", "success")
+        return redirect(url_for("staff"))
+    
+
+    @app.route("/admin/staff/blacklist/<int:user_id>")
+    def blacklist_staff(user_id):
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=user_id).first()
+        if not staff:
+            flash("No staff found!", "danger")
+            return redirect(url_for("staff"))
+        
+        if staff.role != "Staff":
+            flash("Invalid staff!", "danger")
+            return redirect(url_for("staff"))
+        
+        if staff.account_status == "Blacklisted":
+            flash("Staff is already blacklisted!", "warning")
+            return redirect(url_for("staff"))
+        
+        active_treks = Trek.query.filter(Trek.staff_id == user_id, 
+                                         Trek.status.in_(["Open", "Closed", "Pending", "Approved"])).all()
+        for trek in active_treks:
+            trek.manager = None
+        
+        staff.account_status = "Blacklisted"
+        db.session.commit()
+        flash("Staff blacklisted successfully. Active treks have been unassigned.", "success")
+        return redirect(url_for("staff"))
+    
+
+
+    @app.route("/admin/users")
+    def users():
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        status = request.args.get("status")
+        search = request.args.get("search")
+
+        query = User.query.filter_by(role="User")
+
+        if status in ["Approved", "Blacklisted"]:
+            query = query.filter_by(account_status=status)
+        
+        if search:
+            query = query.filter(or_(
+                User.name.ilike(f"%{search}%"),
+                User.email.ilike(f"%{search}%")
+            ))
+        
+        user = query.all()
+
+        total = User.query.filter_by(role="User").count()
+        approved = User.query.filter_by(role="User", account_status="Approved").count()
+        blacklisted = User.query.filter_by(role="User", account_status="Blacklisted").count()
+
+        return render_template("admin/users.html",
+                               user=user,
+                               total=total,
+                               approved=approved,
+                               blacklisted=blacklisted)
+    
+
+    @app.route("/admin/users/approve/<int:user_id>")
+    def approve_user(user_id):
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        user = User.query.filter_by(user_id=user_id).first()
+        if not user:
+            flash("No user found!", "danger")
+            return redirect(url_for("users"))
+        
+        if user.role != "User":
+            flash("Invalid user!", "danger")
+            return redirect(url_for("users"))
+        
+        if user.account_status == "Approved":
+            flash("User is already approved!", "warning")
+            return redirect(url_for("users"))
+        
+        user.account_status = "Approved"
+        db.session.commit()
+        flash("User approved successfully!", "success")
+        return redirect(url_for("users"))
+    
+
+    @app.route("/admin/users/blacklist/<int:user_id>")
+    def blacklist_user(user_id):
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+        
+        if session.get("role") != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        user = User.query.filter_by(user_id=user_id).first()
+        if not user:
+            flash("No user found!", "danger")
+            return redirect(url_for("users"))
+        
+        if user.role != "User":
+            flash("Invalid user!", "danger")
+            return redirect(url_for("users"))
+        
+        if user.account_status == "Blacklisted":
+            flash("User is already blacklisted!", "warning")
+            return redirect(url_for("users"))
+        
+        user.account_status = "Blacklisted"
+        db.session.commit()
+        flash("User blacklisted successfully!", "success")
+        return redirect(url_for("users"))

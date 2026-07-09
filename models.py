@@ -29,7 +29,7 @@ class Trek(db.Model):
     end_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text)
     image = db.Column(db.String(255))
-    status = db.Column(Enum("Open", "Closed", "Completed"), nullable=False)
+    status = db.Column(Enum("Pending", "Approved", "Open", "Closed", "Completed"), nullable=False)
     
     staff_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
 

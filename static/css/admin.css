@@ -39,9 +39,9 @@
     margin: 25px;
 }
 
-.content button:hover{
+/* .content button:hover{
     box-shadow: 1px 1px 20px rgba(0,0,0,0.6);
-}
+} */
 
 .box-container{
     display: flex;
@@ -90,32 +90,33 @@
     border: none;
 }
 
-.trek-table{
+/* .trek-table{
     margin-top: 15px;
-}
+} */
 
-.trek-table table{
+.content table{
     min-width: 100%;
     background-color: black;
     box-shadow: 1px 1px 10px;
+    margin-top: 15px;
 }
 
-.trek-table thead{
+.content thead{
     background-color: rgb(8, 45, 8);
     color: white;
     height: 40px;
 }
 
-.trek-table tbody{
+.content tbody{
     background-color: rgb(170, 202, 147);
 }
 
-.trek-table th{
+.content th{
     border: 0.5px solid black;
     padding: 10px;
 }
 
-.trek-table td{
+.content td{
     border: 0.5px solid black;
     padding: 10px;
 }
@@ -141,24 +142,48 @@
     border-radius: 5px;
 }
 
-.trek-table tbody tr:hover{
+.content tbody tr:hover{
     background-color: rgb(150, 185, 130);
 }
 
-.trek-search .search-form{
+.content .search-form{
     display: flex;
     margin-top: 15px;
     justify-content: space-between;
+    gap: 5px;
 }
 
-.trek-search .search-bar{
-    width: 90%;
-}
-
-.trek-search .search-btn{
+.content .search-btn{
     width: 9%;
     border: none;
     border-radius: 5px; 
     background-color: rgb(8, 45, 8); 
     color: white;
+}
+
+.user_staff-filter{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.user_staff-filter button{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    width: 200px;
+    height: 40px
+}
+
+.approve-btn{
+    width:80px;
+    background-color:rgb(8,45,8);
+    color:white;
+    padding:5px;
+}
+
+.blacklist-btn{
+    width:80px;
+    background-color:red;
+    color:white;
+    padding:5px; 
 }

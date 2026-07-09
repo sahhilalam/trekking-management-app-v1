@@ -1,0 +1,83 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}
+Staff
+{% endblock title %}
+
+{% block main_content %}
+<h3>User Management</h3>
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="user_staff-filter">
+    <a href="{{ url_for('users') }}">
+        <button>All - {{ total }}</button>
+    </a>
+    <a href="{{ url_for('users', status='Approved') }}">
+        <button>Approved - {{ approved }}</button>
+    </a>
+    <a href="{{ url_for('users', status='Blacklisted') }}">
+        <button>Blacklisted - {{ blacklisted }}</button>
+    </a>
+</div>
+
+<div class="user-search">
+<form action="{{ url_for('users') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name or email" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get("status") %}
+        <input type="hidden" name="status" value="{{ request.args.get('status') }}">
+    {% endif %}
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+
+<div class="user-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if user %}
+                {% for person in user %}
+                    <tr>
+                        <td>{{ person.name }}</td>
+                        <td>{{ person.email }}</td>
+                        <td>{{ person.phone }}</td>
+                        <td>{{ person.account_status }}</td>
+                        <td>
+                            {% if person.account_status == "Approved" %}
+                                <a href="{{ url_for('blacklist_user', user_id=person.user_id) }}" onclick="return confirm('Blacklist this user?')"">
+                                    <button class="blacklist-btn">Blacklist</button>
+                                </a>
+                            {% elif person.account_status == "Blacklisted" %}
+                                <a href="{{ url_for('approve_user', user_id=person.user_id) }}">
+                                    <button class="approve-btn">Approve</button>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">No users found.</td>
+                    </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock main_content %}

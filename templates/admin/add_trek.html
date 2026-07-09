@@ -58,7 +58,8 @@ Add Trek
 
         <label for="status">Status</label>
         <select class="form-control" name="status" id="status" required>
-            <option value="" selected disabled>Select status</option>
+            <option value="Pending" selected>Pending</option>
+            <option value="Approved">Approved</option>
             <option value="Open">Open</option>
             <option value="Closed">Closed</option>
             <option value="Completed">Completed</option>
@@ -71,6 +72,10 @@ Add Trek
         <input type="file" name="image" id="image" class="form-control" accept="image/*">
 
         <button type="submit" class="submit form-control">Create trek</button>
+
+        <a href="{{ url_for('treks') }}">
+            <button type="button" class="form-control" style="font-weight: bold;">Cancel</button>
+        </a>
     </form>
 </div>
 {% endblock main_content %}

@@ -47,12 +47,17 @@ def auth_routes(app):
             name = request.form["name"]
             email = request.form["email"]
             password = request.form["password"]
+            confirm_password = request.form["confirm_password"]
             phone = request.form["phone"]
             role = request.form["role"]
 
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
                 flash("Email already exists!", "danger")
+                return redirect(url_for("register"))
+            
+            if password != confirm_password:
+                flash("Password doesn't match.", "danger")
                 return redirect(url_for("register"))
             
             if role == "User":

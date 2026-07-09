@@ -15,7 +15,7 @@ Treks
             <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
                 {{ msg }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+            </div>
         {% endfor %}
     {% endif %}
 {% endwith %}
@@ -25,7 +25,7 @@ Treks
 </a>
 <div class="trek-search">
 <form action="{{ url_for('treks') }}" method="get" class="search-form">
-    <input type="text" name="search" class="form-control search-bar" placeholder="Search" value="{{ request.args.get('search', '') }}">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location, difficulty, status" value="{{ request.args.get('search', '') }}">
     <button type="submit" class="search-btn">Search</button>
 </form>
 </div>
@@ -71,7 +71,7 @@ Treks
                         <button class="edit">Edit</button>
                     </a>
 
-                    <a href="{{ url_for('delete_trek', trek_id=trek.trek_id) }}" style="text-decoration: none;" onclick="return confirm('Are you sure you want to delete this trek?')">
+                    <a href="{{ url_for('delete_trek', trek_id=trek.trek_id) }}" style="text-decoration: none;" onclick="return confirm('Delete this trek?')">
                         <button class="delete">Delete</button>
                     </a>
                 </td>
