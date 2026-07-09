@@ -20,9 +20,15 @@ Treks
     {% endif %}
 {% endwith %}
 <a href="{{ url_for('add_trek') }}" style="text-decoration: none;">
-    <button style="border-radius: 5px; background-color: rgb(8, 45, 8); color: white; width: 100px; height: 40px;">+
+    <button style="border: none; border-radius: 5px; background-color: rgb(8, 45, 8); color: white; width: 100px; height: 40px;">+
         Add Trek</button>
 </a>
+<div class="trek-search">
+<form action="{{ url_for('treks') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search" value="{{ request.args.get('search', '') }}">
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
 <div class="trek-table">
     <table>
         <thead>

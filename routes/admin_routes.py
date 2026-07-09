@@ -3,6 +3,7 @@ from models import db, Trek, User, Booking
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
+from sqlalchemy import or_
 
 def admin_routes(app):
 
@@ -38,7 +39,17 @@ def admin_routes(app):
             flash("Access denied!", "danger")
             return redirect(url_for("login"))
         
-        treks = Trek.query.all()
+        search = request.args.get("search")
+
+        if search:
+            treks = Trek.query.filter(or_(
+                Trek.trek_name.ilike(f"%{search}%"),
+                Trek.location.ilike(f"%{search}%"),
+                Trek.difficulty.ilike(f"%{search}%"),
+                Trek.status.ilike(f"%{search}%")
+            )).all()
+        else:
+            treks = Trek.query.all()
         return render_template("admin/treks.html", treks=treks)
     
 

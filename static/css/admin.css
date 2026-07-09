@@ -144,3 +144,21 @@
 .trek-table tbody tr:hover{
     background-color: rgb(150, 185, 130);
 }
+
+.trek-search .search-form{
+    display: flex;
+    margin-top: 15px;
+    justify-content: space-between;
+}
+
+.trek-search .search-bar{
+    width: 90%;
+}
+
+.trek-search .search-btn{
+    width: 9%;
+    border: none;
+    border-radius: 5px; 
+    background-color: rgb(8, 45, 8); 
+    color: white;
+}
