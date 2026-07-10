@@ -10,15 +10,15 @@ Admin Dashboard
 <hr>
 
 {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for ctg, msg in messages %}
-                    <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
-                        {{ msg }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+{% if messages %}
+{% for ctg, msg in messages %}
+<div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+    {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
 <div class="box-container">
     <div class="box">
@@ -37,6 +37,5 @@ Admin Dashboard
         <h3>{{ total_staffs }}</h3>
         <p>Total Staff</p>
     </div>
-</div>
 </div>
 {% endblock main_content %}

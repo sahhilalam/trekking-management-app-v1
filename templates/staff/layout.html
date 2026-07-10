@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/staff.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="staff-page">
+    <div class="sidebar">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        </div> 
+        <a href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('staff_treks') }}">My Treks</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="content">
+        {% block main_content %}
+        {% endblock main_content %}
+    </div>
+</div>
+{% endblock content %}

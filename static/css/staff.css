@@ -1,0 +1,181 @@
+.staff-page{
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar{
+    width: 15%;
+    background-color: rgb(8, 45, 8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header{
+    height: 15%;
+    margin-bottom: 30px;
+}
+
+.header img{
+    height: 100%;
+}
+
+.sidebar a{
+    width: 80%;
+    height: 45px;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover{
+    background-color: rgb(30, 75, 30);
+}
+
+.content{
+    width: 85%;
+    margin: 25px;
+}
+
+.box-container{
+    display: flex;
+    justify-content: space-evenly;
+    height: 10%;
+    margin-top: 20px;
+}
+
+.box{
+    background-color: rgb(170, 202, 147);
+    border-radius: 5px;
+    width: 22%;
+    text-align: center;
+    padding-top: 25px;
+    box-shadow: 1px 1px 10px;
+}
+
+.add-trek{
+    width: 800px;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px;
+    padding-top: 25px;
+    padding-bottom: 40px;
+}
+
+.add-trek form{
+    padding-top: 20px;
+    width: 600px;
+    margin: auto;
+}
+
+.add-trek .form-control{
+    margin-bottom: 15px;
+}
+
+.add-trek label{
+    font-weight: bold;
+}
+
+.add-trek .submit{
+    color: white;
+    background-color: rgb(8, 45, 8);
+    font-weight: bold;
+    border: none;
+}
+
+.content table{
+    min-width: 100%;
+    background-color: black;
+    box-shadow: 1px 1px 10px;
+    margin-top: 15px;
+}
+
+.content thead{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    height: 40px;
+}
+
+.content tbody{
+    background-color: rgb(170, 202, 147);
+}
+
+.content th{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.content td{
+    border: 0.5px solid black;
+    padding: 10px;
+}
+
+.trek-table img{
+    object-fit: cover;
+    border-radius:5px;
+}
+
+.trek-table .edit{
+    background-color: rgb(8, 45, 8); 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}
+
+.trek-table .delete{
+    background-color: red; 
+    color: white; 
+    width: 70px; 
+    border: none; 
+    border-radius: 5px;
+}
+
+.content tbody tr:hover{
+    background-color: rgb(150, 185, 130);
+}
+
+.content .search-form{
+    display: flex;
+    margin-top: 15px;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.content .search-btn{
+    width: 9%;
+    border: none;
+    border-radius: 5px; 
+    background-color: rgb(8, 45, 8); 
+    color: white;
+}
+
+.user_staff-filter{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.user_staff-filter button{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    width: 200px;
+    height: 40px
+}
+
+.approve-btn{
+    width:80px;
+    background-color:rgb(8,45,8);
+    color:white;
+    padding:5px;
+}
+
+.blacklist-btn{
+    width:80px;
+    background-color:red;
+    color:white;
+    padding:5px; 
+}
