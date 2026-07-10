@@ -39,18 +39,39 @@ def admin_routes(app):
             flash("Access denied!", "danger")
             return redirect(url_for("login"))
         
+        status = request.args.get("status")
         search = request.args.get("search")
 
+        query = Trek.query
+
+        if status in ["Pending", "Approved", "Open", "Closed", "Completed"]:
+            query=query.filter_by(status=status)
+
         if search:
-            treks = Trek.query.filter(or_(
+            query = query.filter(or_(
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%"),
-                Trek.difficulty.ilike(f"%{search}%"),
-                Trek.status.ilike(f"%{search}%")
-            )).all()
-        else:
-            treks = Trek.query.all()
-        return render_template("admin/treks.html", treks=treks)
+                Trek.difficulty.ilike(f"%{search}%")
+            ))
+        
+
+        treks = query.all()
+        all_treks = Trek.query.count()
+        pending_treks = Trek.query.filter_by(status="Pending").count()
+        approved_treks = Trek.query.filter_by(status="Approved").count()
+        open_treks = Trek.query.filter_by(status="Open").count()
+        closed_treks = Trek.query.filter_by(status="Closed").count()
+        completed_treks = Trek.query.filter_by(status="Completed").count()
+
+
+        return render_template("admin/treks.html", 
+                               treks=treks,
+                               all_treks=all_treks,
+                               pending_treks=pending_treks,
+                               approved_treks=approved_treks,
+                               open_treks=open_treks,
+                               closed_treks=closed_treks,
+                               completed_treks=completed_treks)
     
 
     @app.route("/admin/treks/add", methods=["GET", "POST"])
@@ -158,6 +179,10 @@ def admin_routes(app):
             flash("No trek found!", "danger")
             return redirect(url_for("treks"))
         
+        if trek.bookings:
+            flash("Cannot delete a trek with existing bookings.", "danger")
+            return redirect(url_for("treks"))
+        
         if trek.image:
             image_path = os.path.join(app.config["UPLOAD_FOLDER"], trek.image)
             if os.path.exists(image_path):
@@ -246,6 +271,11 @@ def admin_routes(app):
                 image_name = secure_filename(image.filename)
                 image.save(os.path.join(app.config["UPLOAD_FOLDER"], image_name))
                 trek.image = image_name
+
+            if trek.status != "Completed" and status == "Completed":
+                bookings = Booking.query.filter_by(trek_id=trek_id, booking_status="Booked").all()
+                for booking in bookings:
+                    booking.booking_status = "Completed"
                 
             trek.trek_name = trek_name
             trek.location = location

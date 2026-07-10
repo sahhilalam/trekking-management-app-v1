@@ -1,0 +1,105 @@
+{% extends "staff/layout.html" %}
+
+{% block title %}
+My Treks
+{% endblock %}
+
+{% block main_content %}
+
+<h3>Treks</h3>
+
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div class="trek-filter">
+    <a href="{{ url_for('staff_treks') }}">
+        <button>All - {{ assigned_treks }}</button>
+    </a>
+    <a href="{{ url_for('staff_treks', status='Pending') }}">
+        <button>Pending - {{ pending_treks }}</button>
+    </a>
+    <a href="{{ url_for('staff_treks', status='Approved') }}">
+        <button>Approved - {{ approved_treks }}</button>
+    </a>
+    <a href="{{ url_for('staff_treks', status='Open') }}">
+        <button>Open - {{ open_treks }}</button>
+    </a>
+    <a href="{{ url_for('staff_treks', status='Closed') }}">
+        <button>Closed - {{ closed_treks }}</button>
+    </a>
+    <a href="{{ url_for('staff_treks', status='Completed') }}">
+        <button>Completed - {{ completed_treks }}</button>
+    </a>
+</div>
+
+<div class="trek-search">
+<form action="{{ url_for('staff_treks') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location, difficulty" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get('status') %}
+        <input type="hidden" name="status" value="{{ request.args.get('status') }}">
+    {% endif %}
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+<div class="trek-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th style="text-align: center; width: 100px;">Available slots</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if treks %}
+            {% for trek in treks %}
+            <tr>
+                <td>
+                    {% if trek.image %}
+                    <img src="{{ url_for('static', filename='uploads/treks/' + trek.image) }}" width="80" height="60">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.location }}</td>
+                <td>{{ trek.difficulty }}</td>
+                <td>{{ trek.available_slots }}</td>
+                <td>{{ trek.status }}</td>
+                <td>
+                    {% if trek.status in ["Approved", "Open", "Closed"] %}
+                    <a href="{{ url_for('manage_trek', trek_id=trek.trek_id) }}">
+                        <button class="edit-btn">Manage</button>
+                    </a>
+                    {% endif %}
+
+                    {% if trek.status in ["Open", "Closed", "Completed"] %}
+                    <a href="{{ url_for('trek_participants', trek_id=trek.trek_id) }}">
+                        <button class="participants-btn">Participants</button>
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align:center;">No treks available</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

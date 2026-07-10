@@ -76,9 +76,9 @@ Edit Trek
         <label for="image">New trek image (optional)</label>
         <input type="file" name="image" id="image" class="form-control" accept="image/*">
 
-        <button type="submit" class="submit form-control">Update trek</button>
+        <button type="submit" class="submit form-control" onclick="return confirm('Update this trek?')">Update trek</button>
 
-        <a href="{{ url_for('treks') }}" style="text-decoration: none;">
+        <a href="{{ url_for('treks') }}">
             <button type="button" class="form-control" style="font-weight: bold;">Cancel</button>
         </a>
     </form>

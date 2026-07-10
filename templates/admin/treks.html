@@ -19,13 +19,35 @@ Treks
         {% endfor %}
     {% endif %}
 {% endwith %}
-<a href="{{ url_for('add_trek') }}" style="text-decoration: none;">
-    <button style="border: none; border-radius: 5px; background-color: rgb(8, 45, 8); color: white; width: 100px; height: 40px;">+
-        Add Trek</button>
-</a>
+<div class="trek-filter">
+    <a href="{{ url_for('add_trek') }}">
+    <button style="background-color: goldenrod; color: black;">+ Add Trek</button>
+    </a>
+    <a href="{{ url_for('treks') }}">
+        <button>All - {{ all_treks }}</button>
+    </a>
+    <a href="{{ url_for('treks', status='Pending') }}">
+        <button>Pending - {{ pending_treks }}</button>
+    </a>
+    <a href="{{ url_for('treks', status='Approved') }}">
+        <button>Approved - {{ approved_treks }}</button>
+    </a>
+    <a href="{{ url_for('treks', status='Open') }}">
+        <button>Open - {{ open_treks }}</button>
+    </a>
+    <a href="{{ url_for('treks', status='Closed') }}">
+        <button>Closed - {{ closed_treks }}</button>
+    </a>
+    <a href="{{ url_for('treks', status='Completed') }}">
+        <button>Completed - {{ completed_treks }}</button>
+    </a>
+</div>
 <div class="trek-search">
 <form action="{{ url_for('treks') }}" method="get" class="search-form">
     <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location, difficulty, status" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get('status') %}
+        <input type="hidden" name="status" value="{{ request.args.get('status') }}">
+    {% endif %}
     <button type="submit" class="search-btn">Search</button>
 </form>
 </div>

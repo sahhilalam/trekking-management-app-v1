@@ -55,7 +55,7 @@
     box-shadow: 1px 1px 10px;
 }
 
-.add-trek{
+.edit-trek{
     width: 800px;
     margin: auto;
     background-color: white;
@@ -65,21 +65,26 @@
     padding-bottom: 40px;
 }
 
-.add-trek form{
+.edit-trek form{
     padding-top: 20px;
     width: 600px;
     margin: auto;
 }
 
-.add-trek .form-control{
+.edit-trek .form-control{
     margin-bottom: 15px;
 }
 
-.add-trek label{
+.edit-trek .form-check{
+    margin-bottom: 15px;
+} 
+
+
+.edit-trek label{
     font-weight: bold;
 }
 
-.add-trek .submit{
+.edit-trek .submit{
     color: white;
     background-color: rgb(8, 45, 8);
     font-weight: bold;
@@ -118,7 +123,7 @@
     border-radius:5px;
 }
 
-.trek-table .edit{
+/* .trek-table .edit{
     background-color: rgb(8, 45, 8); 
     color: white; 
     width: 70px; 
@@ -132,7 +137,7 @@
     width: 70px; 
     border: none; 
     border-radius: 5px;
-}
+} */
 
 .content tbody tr:hover{
     background-color: rgb(150, 185, 130);
@@ -153,29 +158,29 @@
     color: white;
 }
 
-.user_staff-filter{
+.trek-filter{
     display: flex;
     justify-content: center;
     gap: 5px;
 }
 
-.user_staff-filter button{
+.trek-filter button{
     background-color: rgb(8, 45, 8);
     color: white;
-    width: 200px;
+    width: 150px;
     height: 40px
 }
 
-.approve-btn{
-    width:80px;
+.participants-btn{
+    width:110px;
     background-color:rgb(8,45,8);
     color:white;
     padding:5px;
 }
 
-.blacklist-btn{
-    width:80px;
-    background-color:red;
-    color:white;
-    padding:5px; 
+.edit-btn{
+    width:110px;
+    background-color: goldenrod;
+    color:black;
+    padding:6px; 
 }

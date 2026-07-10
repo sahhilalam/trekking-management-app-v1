@@ -90,9 +90,18 @@
     border: none;
 }
 
-/* .trek-table{
-    margin-top: 15px;
-} */
+.trek-filter{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.trek-filter button{
+    background-color: rgb(8, 45, 8);
+    color: white;
+    width: 150px;
+    height: 40px
+}
 
 .content table{
     min-width: 100%;

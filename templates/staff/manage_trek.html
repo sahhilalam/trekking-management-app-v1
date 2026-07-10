@@ -1,0 +1,105 @@
+{% extends "staff/layout.html" %}
+
+{% block title %}
+Update Trek
+{% endblock %}
+
+{% block main_content %}
+
+<h3>Update Trek</h3>
+
+<hr>
+
+<div class="edit-trek">
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    {% for ctg, msg in messages %}
+    <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="width: 700px; margin: auto;" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post">
+        {% if trek.image %}
+        <img src="{{ url_for('static', filename='uploads/treks/' + trek.image) }}" width="100%"
+            style="border-radius: 8px;">
+        <br>
+        <br>
+        {% endif %}
+
+        <label for="name">Trek Name</label>
+        <input class="form-control" type="text" id="name" name="trek_name" value="{{ trek.trek_name }}" disabled>
+
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" name="location" value="{{ trek.location }}" disabled>
+
+        <label for="staff">Assigned staff</label>
+        <input type="text" name="staff" id="staff" class="form-control"
+            value="{{ trek.manager.name }} ({{ trek.manager.email }})" disabled>
+
+        <label for="difficulty">Difficulty</label>
+        <input type="text" name="difficulty" id="difficulty" class="form-control" value="{{ trek.difficulty }}"
+            disabled>
+
+        <label for="duration">Duration (in days)</label>
+        <input type="number" class="form-control" id="duration" name="duration" min="1" value="{{ trek.duration }}"
+            disabled>
+
+        <label for="slots">Available slots</label>
+        {% if trek.status in ["Approved", "Open"] %}
+        <input type="number" class="form-control" id="slots" name="available_slots" min="0"
+            value="{{ trek.available_slots }}" required>
+        {% else %}
+        <input type="text" class="form-control" name="slots" id="slots" value="{{ trek.available_slots }}" disabled>
+        {% endif %}
+
+        <label for="start_date">Start Date</label>
+        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ trek.start_date }}"
+            disabled>
+
+        <label for="end_date">End Date</label>
+        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ trek.end_date }}" disabled>
+
+        <label for="status">Current Status</label>
+        <input type="text" class="form-control" name="status" value="{{ trek.status }}" id="status" disabled>
+        {% if trek.status == "Approved" %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="change_status" id="change_status">
+            <label class="form-check-label" for="change_status">
+                Open bookings
+            </label>
+        </div>
+
+        {% elif trek.status == "Open" %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="change_status" id="change_status">
+            <label class="form-check-label" for="change_status">
+                Start trek
+            </label>
+        </div>
+
+        {% elif trek.status == "Closed" %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="change_status" id="change_status">
+            <label class="form-check-label" for="change_status">
+                Mark trek as completed
+            </label>
+        </div>
+        {% endif %}
+
+        <label for="description">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="5"
+            disabled>{{ trek.description }}</textarea>
+
+        <button type="submit" class="submit form-control" onclick="return confirm('Update this trek?')">Update trek</button>
+
+        <a href="{{ url_for('staff_treks') }}">
+            <button type="button" class="form-control" style="font-weight: bold;">Cancel</button>
+        </a>
+    </form>
+</div>
+
+{% endblock main_content %}

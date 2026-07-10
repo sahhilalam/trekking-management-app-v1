@@ -71,7 +71,7 @@ Add Trek
         <label for="image">Trek image (optional)</label>
         <input type="file" name="image" id="image" class="form-control" accept="image/*">
 
-        <button type="submit" class="submit form-control">Create trek</button>
+        <button type="submit" class="submit form-control" onclick="return confirm('Add this trek?')">Create trek</button>
 
         <a href="{{ url_for('treks') }}">
             <button type="button" class="form-control" style="font-weight: bold;">Cancel</button>
