@@ -175,7 +175,7 @@
     width:110px;
     background-color:rgb(8,45,8);
     color:white;
-    padding:5px;
+    padding:6px;
 }
 
 .edit-btn{
@@ -183,4 +183,11 @@
     background-color: goldenrod;
     color:black;
     padding:6px; 
+}
+
+.cancel-btn{
+    width:110px;
+    background-color:red;
+    color:white;
+    padding:6px;
 }

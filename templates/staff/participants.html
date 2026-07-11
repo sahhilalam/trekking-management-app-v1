@@ -1,0 +1,76 @@
+{% extends "staff/layout.html" %}
+
+{% block title %}
+Participants
+{% endblock %}
+
+{% block main_content %}
+
+<h3>Participants of {{ trek.trek_name }}</h3>
+
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<h5>Total number of participants - {{ bookings_count }}</h5>
+
+<div class="user-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if bookings %}
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.booking_id }}</td>
+                    <td>{{ booking.user.name }}</td>
+                    <td>{{ booking.user.email }}</td>
+                    <td>{{ booking.user.phone }}</td>
+                    <td>{{ booking.booking_date }}</td>
+                    <td>{{ booking.booking_status }}</td>
+                    {% if booking.trek.status not in ["Closed", "Completed"] and booking.booking_status == "Booked" %}
+                        <td>
+                            <a href="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" onclick="return confirm('Cancel this booking?')">
+                                <button class="cancel-btn">Cancel booking</button>
+                            </a>
+                        </td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align:center;">
+                        No Bookings found.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<br>
+
+<a href="{{ url_for('staff_treks') }}">
+    <button class="form-control">Back</button>
+</a>
+
+{% endblock main_content %}

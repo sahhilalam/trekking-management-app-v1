@@ -488,6 +488,12 @@ def admin_routes(app):
             return redirect(url_for("users"))
         
         user.account_status = "Blacklisted"
+
+        bookings = Booking.query.filter_by(user_id=user_id, booking_status="Booked").all()
+        for booking in bookings:
+            booking.booking_status = "Cancelled"
+            booking.trek.available_slots += 1
+            
         db.session.commit()
         flash("User blacklisted successfully!", "success")
         return redirect(url_for("users"))

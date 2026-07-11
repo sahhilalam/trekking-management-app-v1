@@ -130,4 +130,68 @@ def staff_routes(app):
 
     @app.route("/staff/treks/participants/<int:trek_id>")
     def trek_participants(trek_id):
-        pass 
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+
+        if session["role"] != "Staff":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+
+        trek = Trek.query.filter_by(trek_id=trek_id).first()
+
+        if not trek:
+            flash("No trek found!", "danger")
+            return redirect(url_for("staff_treks"))
+
+        if trek.staff_id != session["user_id"]:
+            flash("Invalid trek!", "danger")
+            return redirect(url_for("staff_treks"))
+
+        bookings = Booking.query.filter_by(trek_id=trek_id).order_by(Booking.booking_date.desc()).all()
+        bookings_count = Booking.query.filter(Booking.trek_id == trek_id, 
+                                              Booking.booking_status != "Cancelled").count()
+
+        return render_template("staff/participants.html",
+                                trek=trek,
+                                bookings=bookings,
+                                bookings_count=bookings_count)
+    
+
+    @app.route("/staff/booking/cancel/<int:booking_id>")
+    def cancel_booking(booking_id):
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+
+        if session["role"] != "Staff":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+
+        booking = Booking.query.filter_by(booking_id=booking_id).first()
+
+        if not booking:
+            flash("No booking found!", "danger")
+            return redirect(url_for("staff_treks"))
+
+        trek = booking.trek
+
+        if trek.staff_id != session["user_id"]:
+            flash("You cannot manage this booking.", "danger")
+            return redirect(url_for("staff_treks"))
+        
+        if trek.status in ["Closed", "Completed"]:
+            flash("Bookings cannot be cancelled after the trek has started.", "warning")
+            return redirect(url_for("trek_participants", trek_id=trek.trek_id))
+
+        if booking.booking_status != "Booked":
+            flash("Only active bookings can be cancelled.", "warning")
+            return redirect(url_for("trek_participants", trek_id=trek.trek_id))
+
+        booking.booking_status = "Cancelled"
+        trek.available_slots += 1
+
+        db.session.commit()
+
+        flash("Booking cancelled successfully.", "success")
+        return redirect(url_for("trek_participants", trek_id=trek.trek_id))
