@@ -1,0 +1,101 @@
+{% extends "user/layout.html" %}
+
+{% block title %}
+Treks
+{% endblock %}
+
+{% block main_content %}
+
+<h3>Available Treks</h3>
+
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div class="trek-filter">
+    <a href="{{ url_for('user_treks') }}">
+        <button>All - {{ all_treks }}</button>
+    </a>
+    <a href="{{ url_for('user_treks', difficulty='Easy') }}">
+        <button>Easy - {{ easy_treks }}</button>
+    </a>
+    <a href="{{ url_for('user_treks', difficulty='Moderate') }}">
+        <button>Moderate - {{ moderate_treks }}</button>
+    </a>
+    <a href="{{ url_for('user_treks', difficulty='Hard') }}">
+        <button>Hard - {{ hard_treks }}</button>
+    </a>
+</div>
+
+<div class="trek-search">
+<form action="{{ url_for('user_treks') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get('difficulty') %}
+        <input type="hidden" name="difficulty" value="{{ request.args.get('difficulty') }}">
+    {% endif %}
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+
+
+<div class="trek-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th style="text-align: center; width: 100px;">Available slots</th>
+                <th style="text-align: center; width: 100px;">Duration (in days)</th>
+                <th style="text-align: center;">Start Date <br> (YYYY-MM-DD)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if treks %}
+            {% for trek in treks %}
+            <tr>
+                <td>
+                    {% if trek.image %}
+                    <img src="{{ url_for('static', filename='uploads/treks/' + trek.image) }}" width="80" height="60">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.location }}</td>
+                <td>{{ trek.difficulty }}</td>
+                <td>
+                    {% if trek.available_slots > 0 %}
+                    {{ trek.available_slots }}
+                    {% else %}
+                    <span style="color:red;">Full</span>
+                    {% endif %}
+                </td>
+                <td>{{ trek.duration }}</td>
+                <td>{{ trek.start_date }}</td>
+                <td>
+                    <a href="{{ url_for('trek_detail', trek_id=trek.trek_id) }}">
+                        <button class="manage-btn">View Details</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No treks available</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

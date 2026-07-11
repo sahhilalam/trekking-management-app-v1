@@ -1,0 +1,97 @@
+{% extends "user/layout.html" %}
+
+{% block title %}
+Bookings
+{% endblock %}
+
+{% block main_content %}
+
+<h3>My Bookings</h3>
+
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div class="trek-filter">
+    <a href="{{ url_for('user_bookings') }}">
+        <button>All - {{ all_bookings }}</button>
+    </a>
+    <a href="{{ url_for('user_bookings', status='Booked') }}">
+        <button>Booked - {{ booked }}</button>
+    </a>
+    <a href="{{ url_for('user_bookings', status='Cancelled') }}">
+        <button>Cancelled - {{ cancelled }}</button>
+    </a>
+    <a href="{{ url_for('user_bookings', status='Completed') }}">
+        <button>Completed - {{ completed }}</button>
+    </a>
+</div>
+
+<div class="trek-search">
+<form action="{{ url_for('user_bookings') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get('status') %}
+        <input type="hidden" name="status" value="{{ request.args.get('status') }}">
+    {% endif %}
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+
+
+<div class="trek-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
+                <th>Trek Status</th>
+                <th>Booking Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if bookings %}
+            {% for booking in bookings %}
+            <tr>
+                <td>
+                    {% if booking.trek.image %}
+                    <img src="{{ url_for('static', filename='uploads/treks/' + booking.trek.image) }}" width="80" height="60">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td>{{ booking.trek.trek_name }}</td>
+                <td>{{ booking.trek.location }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.trek.status }}</td>
+                <td>{{ booking.booking_status }}</td>
+                <td>
+                    {% if booking.booking_status == "Booked" and booking.trek.status == "Open" %}
+                    <a href="{{ url_for('user_cancel_booking', booking_id=booking.booking_id) }}" onclick="return confirm('Cancel this booking?')">
+                        <button class="cancel-btn">Cancel Booking</button>
+                    </a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align:center;">No treks available</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

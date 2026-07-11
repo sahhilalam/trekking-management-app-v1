@@ -44,11 +44,11 @@ def auth_routes(app):
     @app.route("/register", methods=["GET", "POST"])
     def register():
         if request.method == "POST":
-            name = request.form["name"]
-            email = request.form["email"]
+            name = request.form["name"].strip()
+            email = request.form["email"].strip().lower()
             password = request.form["password"]
             confirm_password = request.form["confirm_password"]
-            phone = request.form["phone"]
+            phone = request.form["phone"].strip()
             role = request.form["role"]
 
             existing_user = User.query.filter_by(email=email).first()

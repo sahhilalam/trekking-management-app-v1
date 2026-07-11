@@ -1,9 +1,42 @@
-{% extends "base.html" %}
+{% extends "user/layout.html" %}
 
 {% block title %}
 User Dashboard
 {% endblock title %}
 
-{% block content %}
-{{ session.get('name') }}
-{% endblock content %}
+{% block main_content %}
+<h3>Welcome {{ session.get('name') }}!</h3>
+
+<hr>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+{% for ctg, msg in messages %}
+<div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+    {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="box-container">
+    <div class="box">
+        <h3>{{ available_treks }}</h3>
+        <p>Available Treks</p>
+    </div>
+    <div class="box">
+        <h3>{{ completed_treks }}</h3>
+        <p>Completed Treks</p>
+    </div>
+    <div class="box">
+        <h3>{{ active_bookings }}</h3>
+        <p>My Active Bookings</p>
+    </div>
+    <div class="box">
+        <h3>{{ cancelled_bookings }}</h3>
+        <p>Cancelled Bookings</p>
+    </div>
+</div>
+
+{% endblock main_content %}

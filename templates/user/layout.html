@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="user-page">
+    <div class="sidebar">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        </div> 
+        <a href="{{ url_for('user_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('user_treks') }}">Browse Treks</a>
+        <a href="{{ url_for('user_bookings') }}">My Bookings</a>
+        <a href="{{ url_for('trek_history') }}">Trek History</a>
+        <a href="{{ url_for('user_profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="content">
+        {% block main_content %}
+        {% endblock main_content %}
+    </div>
+</div>
+{% endblock content %}

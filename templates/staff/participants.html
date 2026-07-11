@@ -47,7 +47,7 @@ Participants
                     <td>{{ booking.booking_status }}</td>
                     {% if booking.trek.status not in ["Closed", "Completed"] and booking.booking_status == "Booked" %}
                         <td>
-                            <a href="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" onclick="return confirm('Cancel this booking?')">
+                            <a href="{{ url_for('staff_cancel_booking', booking_id=booking.booking_id) }}" onclick="return confirm('Cancel this booking?')">
                                 <button class="cancel-btn">Cancel booking</button>
                             </a>
                         </td>

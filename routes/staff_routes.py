@@ -14,6 +14,12 @@ def staff_routes(app):
             flash("Access denied!", "danger")
             return redirect(url_for("login"))
         
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
+            return redirect(url_for("login"))
+        
         assigned_treks = Trek.query.filter_by(staff_id=session["user_id"]).count()
         open_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Open").count()
         completed_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Completed").count()
@@ -34,6 +40,12 @@ def staff_routes(app):
 
         if session["role"] != "Staff":
             flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
             return redirect(url_for("login"))
         
         query = Trek.query.filter_by(staff_id=session["user_id"])
@@ -77,6 +89,12 @@ def staff_routes(app):
 
         if session["role"] != "Staff":
             flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
             return redirect(url_for("login"))
         
         trek = Trek.query.filter_by(trek_id=trek_id).first()
@@ -137,6 +155,12 @@ def staff_routes(app):
         if session["role"] != "Staff":
             flash("Access denied!", "danger")
             return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
+            return redirect(url_for("login"))
 
         trek = Trek.query.filter_by(trek_id=trek_id).first()
 
@@ -159,13 +183,19 @@ def staff_routes(app):
     
 
     @app.route("/staff/booking/cancel/<int:booking_id>")
-    def cancel_booking(booking_id):
+    def staff_cancel_booking(booking_id):
         if "user_id" not in session:
             flash("Please login first!", "danger")
             return redirect(url_for("login"))
 
         if session["role"] != "Staff":
             flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
             return redirect(url_for("login"))
 
         booking = Booking.query.filter_by(booking_id=booking_id).first()
@@ -208,11 +238,15 @@ def staff_routes(app):
             return redirect(url_for("login"))
 
         staff = User.query.filter_by(user_id=session["user_id"]).first()
+        if staff.account_status == "Blacklisted":
+            session.clear()
+            flash("Your account has been blacklisted. Contact the administrator", "danger")
+            return redirect(url_for("login"))
 
         if request.method == "POST":
-            name = request.form["name"]
-            email = request.form["email"]
-            phone = request.form["phone"]
+            name = request.form["name"].strip()
+            email = request.form["email"].strip().lower()
+            phone = request.form["phone"].strip()
             current_password = request.form["current_password"]
             new_password = request.form["new_password"]
             confirm_password = request.form["confirm_password"]
@@ -235,7 +269,8 @@ def staff_routes(app):
                 if new_password == "":
                     flash("New password cannot be empty.", "danger")
                     return redirect(url_for("staff_profile"))
-                    staff.password = new_password
+                    
+                staff.password = new_password
         
             staff.name = name
             staff.email = email

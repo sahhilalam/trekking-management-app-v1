@@ -1,0 +1,76 @@
+{% extends "user/layout.html" %}
+
+{% block title %}
+Trek History
+{% endblock %}
+
+{% block main_content %}
+
+<h3>My Trekking History</h3>
+
+<hr>
+
+<h5>Total Treks Completed - {{ completed }}</h5>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="trek-search">
+<form action="{{ url_for('trek_history') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location, difficulty" value="{{ request.args.get('search', '') }}">
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+
+
+<div class="trek-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th>Guide</th>
+                <th style="text-align: center;">Duration <br> (in days)</th>
+                <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if bookings %}
+            {% for booking in bookings %}
+            <tr>
+                <td>
+                    {% if booking.trek.image %}
+                    <img src="{{ url_for('static', filename='uploads/treks/' + booking.trek.image) }}" width="80" height="60">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td>{{ booking.trek.trek_name }}</td>
+                <td>{{ booking.trek.location }}</td>
+                <td>{{ booking.trek.difficulty }}</td>
+                <td>{{ booking.trek.manager.name }} ({{ booking.trek.manager.email }})</td>
+                <td>{{ booking.trek.duration }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.trek.status }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No trekking history found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

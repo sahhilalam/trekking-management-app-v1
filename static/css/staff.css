@@ -123,22 +123,6 @@
     border-radius:5px;
 }
 
-/* .trek-table .edit{
-    background-color: rgb(8, 45, 8); 
-    color: white; 
-    width: 70px; 
-    border: none; 
-    border-radius: 5px;
-}
-
-.trek-table .delete{
-    background-color: red; 
-    color: white; 
-    width: 70px; 
-    border: none; 
-    border-radius: 5px;
-} */
-
 .content tbody tr:hover{
     background-color: rgb(150, 185, 130);
 }
