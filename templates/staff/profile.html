@@ -1,0 +1,63 @@
+{% extends "staff/layout.html" %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+{% block main_content %}
+
+<h3>My Profile</h3>
+
+<hr>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="edit-trek">
+    <form method="post">
+
+        <label>Name</label>
+        <input type="text" class="form-control" name="name" value="{{ staff.name }}" required>
+
+        <label>Email</label>
+        <input type="email" class="form-control" name="email" value="{{ staff.email }}" required>
+
+        <label>Phone</label>
+        <input type="tel" class="form-control" name="phone" value="{{ staff.phone }}" pattern="^\+91\d{10}$" required>
+
+        <label>Account Status</label>
+        <input type="text" class="form-control" value="{{ staff.account_status }}" disabled>
+        <br>
+        <h5>Change Password (optional)</h5>
+        <br>
+        <label for="current_password">Current Password</label>
+        <input type="password" class="form-control" name="current_password">
+
+        <label for="new_password">New Password</label>
+        <input type="password" class="form-control" name="new_password">
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" class="form-control" name="confirm_password">
+
+        <button class="submit form-control" type="submit">
+            Update Profile
+        </button>
+
+        <a href="{{ url_for('staff_dashboard') }}">
+            <button type="button" class="form-control">
+                Cancel
+            </button>
+        </a>
+
+    </form>
+</div>
+
+{% endblock %}

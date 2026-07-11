@@ -195,3 +195,57 @@ def staff_routes(app):
 
         flash("Booking cancelled successfully.", "success")
         return redirect(url_for("trek_participants", trek_id=trek.trek_id))
+    
+
+    @app.route("/staff/profile", methods=["GET", "POST"])
+    def staff_profile():
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+
+        if session["role"] != "Staff":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+
+        staff = User.query.filter_by(user_id=session["user_id"]).first()
+
+        if request.method == "POST":
+            name = request.form["name"]
+            email = request.form["email"]
+            phone = request.form["phone"]
+            current_password = request.form["current_password"]
+            new_password = request.form["new_password"]
+            confirm_password = request.form["confirm_password"]
+
+            existing_user = User.query.filter_by(email=email).first()
+
+            if existing_user and existing_user.user_id != staff.user_id:
+                flash("Email already exists!", "danger")
+                return redirect(url_for("staff_profile"))
+            
+            if current_password or new_password or confirm_password:
+                if current_password != staff.password:
+                    flash("Current password is incorrect.", "danger")
+                    return redirect(url_for("staff_profile"))
+
+                if new_password != confirm_password:
+                    flash("New passwords do not match.", "danger")
+                    return redirect(url_for("staff_profile"))
+
+                if new_password == "":
+                    flash("New password cannot be empty.", "danger")
+                    return redirect(url_for("staff_profile"))
+                    staff.password = new_password
+        
+            staff.name = name
+            staff.email = email
+            staff.phone = phone
+
+            db.session.commit()
+
+            session["name"] = staff.name
+
+            flash("Profile updated successfully!", "success")
+            return redirect(url_for("staff_profile"))
+
+        return render_template("staff/profile.html", staff=staff)

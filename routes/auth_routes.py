@@ -57,7 +57,7 @@ def auth_routes(app):
                 return redirect(url_for("register"))
             
             if password != confirm_password:
-                flash("Password doesn't match.", "danger")
+                flash("Passwords do not match.", "danger")
                 return redirect(url_for("register"))
             
             if role == "User":
