@@ -35,7 +35,7 @@ Staff
 
 <div class="staff-search">
 <form action="{{ url_for('staff') }}" method="get" class="search-form">
-    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name or email" value="{{ request.args.get('search', '') }}">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, ID, email" value="{{ request.args.get('search', '') }}">
     {% if request.args.get("status") %}
         <input type="hidden" name="status" value="{{ request.args.get('status') }}">
     {% endif %}
@@ -48,6 +48,7 @@ Staff
         <thead>
             <tr>
                 <th>Name</th>
+                <th>ID</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Status</th>
@@ -59,6 +60,7 @@ Staff
                 {% for person in staff %}
                     <tr>
                         <td>{{ person.name }}</td>
+                        <td>{{ person.user_id }}</td>
                         <td>{{ person.email }}</td>
                         <td>{{ person.phone }}</td>
                         <td>{{ person.account_status }}</td>
@@ -84,7 +86,7 @@ Staff
                 {% endfor %}
             {% else %}
                     <tr>
-                        <td colspan="5" style="text-align: center;">No staff found.</td>
+                        <td colspan="6" style="text-align: center;">No staff found.</td>
                     </tr>
             {% endif %}
         </tbody>

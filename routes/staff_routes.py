@@ -56,6 +56,7 @@ def staff_routes(app):
             query = query.filter_by(status=status)
 
         if search:
+            search = search.strip()
             query = query.filter(or_(
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%"),

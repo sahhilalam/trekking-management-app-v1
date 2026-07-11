@@ -1,0 +1,89 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}
+Bookings
+{% endblock title %}
+
+{% block main_content %}
+<h3>Bookings</h3>
+<hr>
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for ctg, msg in messages %}
+            <div class="alert alert-{{ ctg }} alert-dismissible fade show" style="margin-bottom: 20px;" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="trek-filter">
+    <a href="{{ url_for('bookings') }}">
+        <button>All - {{ all_bookings }}</button>
+    </a>
+    <a href="{{ url_for('bookings', status='Booked') }}">
+        <button>Booked - {{ booked }}</button>
+    </a>
+    <a href="{{ url_for('bookings', status='Cancelled') }}">
+        <button>Cancelled - {{ cancelled }}</button>
+    </a>
+    <a href="{{ url_for('bookings', status='Completed') }}">
+        <button>Completed - {{ completed }}</button>
+    </a>
+</div>
+
+<div class="trek-search">
+<form action="{{ url_for('bookings') }}" method="get" class="search-form">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by booking ID, trek, user, email, location" value="{{ request.args.get('search', '') }}">
+    {% if request.args.get('status') %}
+        <input type="hidden" name="status" value="{{ request.args.get('status') }}">
+    {% endif %}
+    <button type="submit" class="search-btn">Search</button>
+</form>
+</div>
+
+<div class="trek-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>Trek Name</th>
+                <th>Guide</th>
+                <th>Location</th>
+                <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
+                <th>Trek Status</th>
+                <th>Booking Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if bookings %}
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.booking_id }}</td>
+                <td>{{ booking.user.name }} ({{ booking.user.email }})</td>
+                <td>{{ booking.trek.trek_name }}</td>
+                <td>
+                    {% if booking.trek.manager %}
+                    {{ booking.trek.manager.name }} ({{ booking.trek.manager.email }})
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </td>
+                <td>{{ booking.trek.location }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.trek.status }}</td>
+                <td>{{ booking.booking_status }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No bookings available</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

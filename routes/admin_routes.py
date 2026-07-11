@@ -48,11 +48,15 @@ def admin_routes(app):
             query=query.filter_by(status=status)
 
         if search:
-            query = query.filter(or_(
-                Trek.trek_name.ilike(f"%{search}%"),
-                Trek.location.ilike(f"%{search}%"),
-                Trek.difficulty.ilike(f"%{search}%")
-            ))
+            search = search.strip()
+            if search.isdigit():
+                query = query.filter(Trek.trek_id == int(search))
+            else:
+                query = query.filter(or_(
+                    Trek.trek_name.ilike(f"%{search}%"),
+                    Trek.location.ilike(f"%{search}%"),
+                    Trek.difficulty.ilike(f"%{search}%")
+                ))
         
 
         treks = query.all()
@@ -314,11 +318,15 @@ def admin_routes(app):
             query = query.filter_by(account_status=status)
         
         if search:
-            query = query.filter(or_(
-                User.name.ilike(f"%{search}%"),
-                User.email.ilike(f"%{search}%")
-            ))
-        
+            search = search.strip()
+            if search.isdigit():
+                query = query.filter(User.user_id == int(search))
+            else:
+                query = query.filter(or_(
+                    User.name.ilike(f"%{search}%"),
+                    User.email.ilike(f"%{search}%")
+                ))
+
         staff = query.all()
 
         total = User.query.filter_by(role="Staff").count()
@@ -417,10 +425,14 @@ def admin_routes(app):
             query = query.filter_by(account_status=status)
         
         if search:
-            query = query.filter(or_(
-                User.name.ilike(f"%{search}%"),
-                User.email.ilike(f"%{search}%")
-            ))
+            search = search.strip()
+            if search.isdigit():
+                query = query.filter(User.user_id == int(search))
+            else:
+                query = query.filter(or_(
+                    User.name.ilike(f"%{search}%"),
+                    User.email.ilike(f"%{search}%")
+                ))
         
         user = query.all()
 
@@ -493,7 +505,62 @@ def admin_routes(app):
         for booking in bookings:
             booking.booking_status = "Cancelled"
             booking.trek.available_slots += 1
-            
+
         db.session.commit()
         flash("User blacklisted successfully!", "success")
         return redirect(url_for("users"))
+    
+
+
+    @app.route("/admin/bookings")
+    def bookings():
+        if "user_id" not in session:
+            flash("Please login first!", "danger")
+            return redirect(url_for("login"))
+
+        if session["role"] != "Admin":
+            flash("Access denied!", "danger")
+            return redirect(url_for("login"))
+        
+        status = request.args.get("status")
+        search = request.args.get("search")
+
+        query = Booking.query
+
+        if status in ["Booked", "Cancelled", "Completed"]:
+            query = query.filter_by(booking_status=status)
+
+        if search:
+            search = search.strip()
+            if search.isdigit():
+                query = query.filter(Booking.booking_id == int(search))
+            else:
+                query = query.join(User).join(Trek).filter(or_(
+                    User.name.ilike(f"%{search}%"),
+                    User.email.ilike(f"%{search}%"),
+                    Trek.trek_name.ilike(f"%{search}%"),
+                    Trek.location.ilike(f"%{search}%")
+                ))
+
+        bookings = query.order_by(Booking.booking_date.desc()).all()
+
+        all_bookings = Booking.query.count()
+
+        booked = Booking.query.filter_by(
+            booking_status="Booked"
+        ).count()
+
+        cancelled = Booking.query.filter_by(
+            booking_status="Cancelled"
+        ).count()
+
+        completed = Booking.query.filter_by(
+            booking_status="Completed"
+        ).count()
+
+        return render_template("admin/bookings.html",
+                               bookings=bookings,
+                               all_bookings=all_bookings,
+                               booked=booked,
+                               cancelled=cancelled,
+                               completed=completed)

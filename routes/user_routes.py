@@ -58,6 +58,7 @@ def user_routes(app):
             query = query.filter_by(difficulty=difficulty)
     
         if search:
+            search = search.strip()
             query = query.filter(or_(
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%")
@@ -184,6 +185,7 @@ def user_routes(app):
             query = query.filter_by(booking_status=status)
 
         if search:
+            search = search.strip()
             query = query.join(Trek).filter(or_(
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%")
@@ -278,6 +280,7 @@ def user_routes(app):
         query = Booking.query.filter_by(user_id=session["user_id"], booking_status="Completed")
 
         if search:
+            search = search.strip()
             query = query.join(Trek).filter(or_(
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%"),

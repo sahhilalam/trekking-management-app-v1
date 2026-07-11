@@ -50,6 +50,7 @@ Bookings
         <thead>
             <tr>
                 <th>Image</th>
+                <th>Booking ID</th>
                 <th>Trek Name</th>
                 <th>Location</th>
                 <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
@@ -69,6 +70,7 @@ Bookings
                     No image
                     {% endif %}
                 </td>
+                <td>{{ booking.booking_id }}</td>
                 <td>{{ booking.trek.trek_name }}</td>
                 <td>{{ booking.trek.location }}</td>
                 <td>{{ booking.booking_date }}</td>
@@ -87,7 +89,7 @@ Bookings
             {% endfor %}
             {% else %}
             <tr>
-                <td colspan="7" style="text-align:center;">No treks available</td>
+                <td colspan="8" style="text-align:center;">No treks available</td>
             </tr>
             {% endif %}
         </tbody>
