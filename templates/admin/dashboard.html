@@ -38,4 +38,85 @@ Admin Dashboard
         <p>Total Staff</p>
     </div>
 </div>
+
+<div class="dashboard">
+    <h4>Recently Added Treks</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Guide</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_treks %}
+            {% for trek in recent_treks %}
+            <tr>
+                <td>{{ trek.trek_id }}</td>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.status }}</td>
+                <td>
+                    {% if trek.manager %}
+                        {{ trek.manager.name }} ({{ trek.manager.email }})
+                    {% else %}
+                        Not Assigned
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No treks found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="dashboard">
+    <h4>Recent Bookings</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Trek</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_bookings %}
+            {% for booking in recent_bookings %}
+            <tr>
+                <td>{{ booking.booking_id }}</td>
+                <td>{{ booking.user.name }} (ID - {{ booking.user_id }})</td>
+                <td>{{ booking.trek.trek_name }} (ID - {{ booking.trek_id }})</td>
+                <td>{{ booking.booking_date }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No bookings found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="dashboard">
+    <h4>Pending Staff Approval</h4>
+    {% if pending_staff %}
+    <ul>
+        {% for staff in pending_staff %}
+        <li>{{ staff.name }} ({{ staff.email }})</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No pending approvals.</p>
+    {% endif %}
+</div>
+
 {% endblock main_content %}

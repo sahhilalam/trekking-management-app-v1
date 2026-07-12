@@ -4,7 +4,7 @@
 }
 
 .sidebar{
-    width: 15%;
+    width: 200px;
     background-color: rgb(8, 45, 8);
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
 }
 
 .content{
-    width: 85%;
+    flex: 1;
     margin: 25px;
 }
 
@@ -54,9 +54,21 @@
     background-color: rgb(170, 202, 147);
     border-radius: 5px;
     width: 22%;
-    text-align: center;
-    padding-top: 35px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-shadow: 1px 1px 10px;
+}
+
+.dashboard{
+    margin-top: 40px;
+}
+
+.dashboard h4{
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .add-trek{
@@ -108,6 +120,9 @@
     background-color: black;
     box-shadow: 1px 1px 10px;
     margin-top: 15px;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .content thead{

@@ -1,6 +1,7 @@
 from flask import render_template, redirect, request, url_for, flash, session
 from models import db, User, Trek, Booking
 from sqlalchemy import or_
+from datetime import date
 
 def staff_routes(app):
 
@@ -24,12 +25,20 @@ def staff_routes(app):
         open_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Open").count()
         completed_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Completed").count()
         total_participants = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"]).count()
+        upcoming_treks = Trek.query.filter(
+                         Trek.staff_id == session["user_id"],
+                         Trek.start_date >= date.today(),
+                         Trek.status != "Completed").order_by(Trek.start_date).limit(5).all()
+        recent_bookings = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"]).order_by(Booking.booking_date.desc()).limit(5).all()
+
         
         return render_template("staff/dashboard.html",
                                assigned_treks=assigned_treks,
                                open_treks=open_treks,
                                completed_treks=completed_treks,
-                               total_participants=total_participants)
+                               total_participants=total_participants,
+                               upcoming_treks=upcoming_treks,
+                               recent_bookings=recent_bookings)
     
 
     @app.route("/staff/treks")

@@ -26,11 +26,25 @@ def user_routes(app):
         cancelled_bookings = Booking.query.filter_by(user_id=session["user_id"], booking_status="Cancelled").count()
         completed_treks = Booking.query.filter_by(user_id=session["user_id"], booking_status="Completed").count()
         
+        upcoming_treks = Booking.query.join(Trek).filter(
+            Booking.user_id == session["user_id"],
+            Booking.booking_status == "Booked",
+            Trek.start_date >= date.today()
+        ).order_by(Trek.start_date).limit(5).all()
+
+        recent_history = Booking.query.join(Trek).filter(
+            Booking.user_id == session["user_id"],
+            Booking.booking_status == "Completed"
+        ).order_by(Trek.end_date.desc()).limit(5).all()
+
+
         return render_template("user/dashboard.html",
                                available_treks=available_treks,
                                active_bookings=active_bookings,
                                cancelled_bookings=cancelled_bookings,
-                               completed_treks=completed_treks)
+                               completed_treks=completed_treks,
+                               upcoming_treks=upcoming_treks,
+                               recent_history=recent_history)
     
 
     @app.route("/user/treks")

@@ -21,12 +21,19 @@ def admin_routes(app):
         total_users = User.query.filter_by(role="User").count()
         total_staffs = User.query.filter_by(role="Staff").count()
         total_bookings = Booking.query.count()
+
+        recent_treks = Trek.query.order_by(Trek.trek_id.desc()).limit(5).all()
+        recent_bookings = Booking.query.order_by( Booking.booking_date.desc()).limit(5).all()
+        pending_staff = User.query.filter_by(role="Staff",account_status="Pending").limit(5).all()
         
         return render_template("admin/dashboard.html",
                                total_treks=total_treks,
                                total_bookings=total_bookings,
                                total_users=total_users,
-                               total_staffs=total_staffs)
+                               total_staffs=total_staffs,
+                               recent_treks=recent_treks,
+                               recent_bookings=recent_bookings,
+                               pending_staff=pending_staff)
     
 
     @app.route("/admin/treks")
@@ -543,20 +550,10 @@ def admin_routes(app):
                 ))
 
         bookings = query.order_by(Booking.booking_date.desc()).all()
-
         all_bookings = Booking.query.count()
-
-        booked = Booking.query.filter_by(
-            booking_status="Booked"
-        ).count()
-
-        cancelled = Booking.query.filter_by(
-            booking_status="Cancelled"
-        ).count()
-
-        completed = Booking.query.filter_by(
-            booking_status="Completed"
-        ).count()
+        booked = Booking.query.filter_by(booking_status="Booked").count()
+        cancelled = Booking.query.filter_by(booking_status="Cancelled").count()
+        completed = Booking.query.filter_by(booking_status="Completed").count()
 
         return render_template("admin/bookings.html",
                                bookings=bookings,

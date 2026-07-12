@@ -1,4 +1,4 @@
-from flask import Flask, request, session, render_template, redirect, url_for
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
@@ -21,11 +21,6 @@ admin_routes(app)
 auth_routes(app)
 staff_routes(app)
 user_routes(app)
-
-@app.route("/test")
-def test():
-    treks = Trek.query.all()
-    return render_template("test.html", treks=treks)
 
 if __name__ == "__main__":
     with app.app_context():

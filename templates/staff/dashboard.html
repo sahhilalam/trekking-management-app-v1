@@ -38,4 +38,65 @@ Staff Dashboard
         <p>Total Participants</p>
     </div>
 </div>
+
+<div class="dashboard">
+    <h4>Upcoming Treks</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Available Slots</th>
+                <th>Start Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if upcoming_treks %}
+            {% for trek in upcoming_treks %}
+            <tr>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.status }}</td>
+                <td>{{ trek.available_slots }}</td>
+                <td>{{ trek.start_date }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No assigned treks.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="dashboard">
+    <h4>Recent Bookings</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Participant Name</th>
+                <th>Trek Name</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_bookings %}
+            {% for booking in recent_bookings %}
+            <tr>
+                <td>{{ booking.user.name }} ({{ booking.user.email }})</td>
+                <td>{{ booking.trek.trek_name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_status }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No bookings found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
 {% endblock main_content %}
