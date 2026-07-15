@@ -1,4 +1,4 @@
-# Trekking Management Application - V2
+# Trekking Management Application - V1
 
 A role-based web application developed using Flask for managing trekking activities. The application provides separate dashboards for administrators, staff members, and users to efficiently manage treks, bookings, participants, and user accounts.
 
