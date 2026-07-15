@@ -133,6 +133,10 @@ def admin_routes(app):
                 flash("Invalid status!", "danger")
                 return redirect(url_for("add_trek"))
             
+            if status in ["Closed", "Completed"]:
+                flash("Status must be marked open first.", "warning")
+                return redirect(url_for("add_trek"))
+            
             existing_trek = Trek.query.filter_by(trek_name=trek_name).first()
             if existing_trek:
                 flash("A trek with this name already exists.", "danger")
