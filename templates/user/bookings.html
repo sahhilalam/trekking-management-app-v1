@@ -36,7 +36,7 @@ Bookings
 
 <div class="trek-search">
 <form action="{{ url_for('user_bookings') }}" method="get" class="search-form">
-    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location" value="{{ request.args.get('search', '') }}">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by ID, name, location" value="{{ request.args.get('search', '') }}">
     {% if request.args.get('status') %}
         <input type="hidden" name="status" value="{{ request.args.get('status') }}">
     {% endif %}
@@ -53,6 +53,7 @@ Bookings
                 <th>Booking ID</th>
                 <th>Trek Name</th>
                 <th>Location</th>
+                <th>Guide</th>
                 <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
                 <th>Trek Status</th>
                 <th>Booking Status</th>
@@ -73,6 +74,7 @@ Bookings
                 <td>{{ booking.booking_id }}</td>
                 <td>{{ booking.trek.trek_name }}</td>
                 <td>{{ booking.trek.location }}</td>
+                <td>{{ booking.trek.manager.name }} ({{ booking.trek.manager.email }})</td>
                 <td>{{ booking.booking_date }}</td>
                 <td>{{ booking.trek.status }}</td>
                 <td>{{ booking.booking_status }}</td>
@@ -89,7 +91,7 @@ Bookings
             {% endfor %}
             {% else %}
             <tr>
-                <td colspan="8" style="text-align:center;">No treks available</td>
+                <td colspan="9" style="text-align:center;">No treks available</td>
             </tr>
             {% endif %}
         </tbody>

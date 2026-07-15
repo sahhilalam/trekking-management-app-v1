@@ -53,7 +53,7 @@ Update Trek
         <input type="number" class="form-control" id="slots" name="available_slots" min="0"
             value="{{ trek.available_slots }}" required>
         {% else %}
-        <input type="text" class="form-control" name="slots" id="slots" value="{{ trek.available_slots }}" disabled>
+        <input type="text" class="form-control" name="available_slots" id="slots" value="{{ trek.available_slots }}" disabled>
         {% endif %}
 
         <label for="start_date">Start Date</label>

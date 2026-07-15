@@ -35,7 +35,7 @@ def user_routes(app):
         recent_history = Booking.query.join(Trek).filter(
             Booking.user_id == session["user_id"],
             Booking.booking_status == "Completed"
-        ).order_by(Trek.end_date.desc()).limit(5).all()
+        ).order_by(Trek.end_date.desc(), Booking.booking_id.desc()).limit(5).all()
 
 
         return render_template("user/dashboard.html",
@@ -201,20 +201,17 @@ def user_routes(app):
         if search:
             search = search.strip()
             query = query.join(Trek).filter(or_(
+                Trek.trek_id.ilike(f"%{search}%"),
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%")
             ))
 
-        bookings = query.order_by(Booking.booking_date.desc()).all()
-
+        bookings = query.order_by(Booking.booking_date.desc(), Booking.booking_id.desc()).all()
         all_bookings = Booking.query.filter_by(user_id=session["user_id"]).count()
-
         booked = Booking.query.filter_by(user_id=session["user_id"],
                                          booking_status="Booked").count()
-
         cancelled = Booking.query.filter_by(user_id=session["user_id"],
                                             booking_status="Cancelled").count()
-
         completed = Booking.query.filter_by(user_id=session["user_id"],
                                             booking_status="Completed").count()
         
@@ -296,12 +293,13 @@ def user_routes(app):
         if search:
             search = search.strip()
             query = query.join(Trek).filter(or_(
+                Booking.booking_id.ilike(f"%{search}%"),
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%"),
                 Trek.difficulty.ilike(f"%{search}%")
             ))
 
-        bookings = query.order_by(Booking.booking_date.desc()).all()
+        bookings = query.order_by(Booking.booking_date.desc(), Booking.booking_id.desc()).all()
 
         completed = Booking.query.filter_by(user_id=session["user_id"], booking_status="Completed").count()
 

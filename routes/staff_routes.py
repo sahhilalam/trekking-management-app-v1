@@ -24,12 +24,14 @@ def staff_routes(app):
         assigned_treks = Trek.query.filter_by(staff_id=session["user_id"]).count()
         open_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Open").count()
         completed_treks = Trek.query.filter_by(staff_id=session["user_id"], status="Completed").count()
-        total_participants = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"]).count()
+        total_participants = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"],
+                                                             Booking.booking_status.in_(["Booked", "Completed"])).count()
         upcoming_treks = Trek.query.filter(
                          Trek.staff_id == session["user_id"],
                          Trek.start_date >= date.today(),
                          Trek.status != "Completed").order_by(Trek.start_date).limit(5).all()
-        recent_bookings = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"]).order_by(Booking.booking_date.desc()).limit(5).all()
+        recent_bookings = Booking.query.join(Trek).filter(Trek.staff_id == session["user_id"]).order_by(Booking.booking_date.desc(),
+                                                                                                        Booking.booking_id.desc()).limit(5).all()
 
         
         return render_template("staff/dashboard.html",
@@ -67,6 +69,7 @@ def staff_routes(app):
         if search:
             search = search.strip()
             query = query.filter(or_(
+                Trek.trek_id.ilike(f"%{search}%"),
                 Trek.trek_name.ilike(f"%{search}%"),
                 Trek.location.ilike(f"%{search}%"),
                 Trek.difficulty.ilike(f"%{search}%")
@@ -126,11 +129,13 @@ def staff_routes(app):
             return redirect(url_for("staff_treks"))
         
         if request.method == "POST":
-            available_slots = int(request.form["available_slots"])
-
-            if available_slots < 0:
-                flash("Available slots cannot be negative.", "danger")
-                return redirect(url_for("manage_trek", trek_id=trek_id))
+            
+            if trek.status in ["Approved", "Open"]:
+                available_slots = int(request.form["available_slots"])
+                if available_slots < 0:
+                    flash("Available slots cannot be negative.", "danger")
+                    return redirect(url_for("manage_trek", trek_id=trek_id))
+                trek.available_slots = available_slots
             
             if "change_status" in request.form:
                 if trek.status == "Approved":
@@ -145,9 +150,6 @@ def staff_routes(app):
                 else:
                     flash("Invalid status transition.", "danger")
                     return redirect(url_for("manage_trek", trek_id=trek_id))
-                
-            if trek.status in ["Approved", "Open"]:
-                trek.available_slots = available_slots
 
             db.session.commit()
             flash("Trek updated successfully!", "success")

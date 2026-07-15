@@ -185,7 +185,7 @@
 }
 
 .cancel-btn{
-    width:110px;
+    width:100%;
     background-color:red;
     color:white;
     padding:6px;

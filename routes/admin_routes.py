@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash, session
 from models import db, Trek, User, Booking
 from werkzeug.utils import secure_filename
 import os
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy import or_
 
 def admin_routes(app):
@@ -23,8 +23,9 @@ def admin_routes(app):
         total_bookings = Booking.query.count()
 
         recent_treks = Trek.query.order_by(Trek.trek_id.desc()).limit(5).all()
-        recent_bookings = Booking.query.order_by( Booking.booking_date.desc()).limit(5).all()
-        pending_staff = User.query.filter_by(role="Staff",account_status="Pending").limit(5).all()
+        recent_bookings = Booking.query.order_by(Booking.booking_date.desc(), 
+                                                 Booking.booking_id.desc()).limit(5).all()
+        pending_staff = User.query.filter_by(role="Staff", account_status="Pending").limit(5).all()
         
         return render_template("admin/dashboard.html",
                                total_treks=total_treks,
@@ -116,6 +117,10 @@ def admin_routes(app):
                 flash("Available slots must be greater than 0.", "danger")
                 return redirect(url_for("add_trek"))
             
+            if start_date < date.today():
+                flash("Start date cannot be in the past.", "danger")
+                return redirect(url_for("add_trek"))
+
             if end_date < start_date:
                 flash("End date cannot be before the start date.", "danger")
                 return redirect(url_for("add_trek"))
@@ -190,6 +195,10 @@ def admin_routes(app):
             flash("No trek found!", "danger")
             return redirect(url_for("treks"))
         
+        if trek.status == "Completed":
+            flash("Cannot delete completed treks.", "danger")
+            return redirect(url_for("treks"))
+        
         if trek.bookings:
             flash("Cannot delete a trek with existing bookings.", "danger")
             return redirect(url_for("treks"))
@@ -222,6 +231,10 @@ def admin_routes(app):
             flash("No trek found!", "danger")
             return redirect(url_for("treks"))
         
+        if trek.status == "Completed":
+            flash("Trek is already completed!", "danger")
+            return redirect(url_for("treks"))
+        
         if request.method == "POST":
             trek_name = request.form["trek_name"]
             location = request.form["location"]
@@ -243,6 +256,10 @@ def admin_routes(app):
                 flash("Available slots must be greater than 0.", "danger")
                 return redirect(url_for("edit_trek", trek_id=trek_id))
             
+            if start_date < date.today():
+                flash("Start date cannot be in the past.", "danger")
+                return redirect(url_for("edit_trek", trek_id=trek_id))
+            
             if end_date < start_date:
                 flash("End date cannot be before the start date.", "danger")
                 return redirect(url_for("edit_trek", trek_id=trek_id))
@@ -254,6 +271,7 @@ def admin_routes(app):
             if status not in ["Pending", "Approved", "Open", "Closed", "Completed"]:
                 flash("Invalid status!", "danger")
                 return redirect(url_for("edit_trek", trek_id=trek_id))
+            
             
             existing_trek = Trek.query.filter_by(trek_name=trek_name).first()
             if existing_trek and existing_trek.trek_id != trek.trek_id:
@@ -274,6 +292,14 @@ def admin_routes(app):
                     flash("Staff must be approved by admin.", "danger")
                     return redirect(url_for("edit_trek", trek_id=trek_id))
                 
+            if trek.status in ["Open", "Closed"] and status in ["Pending", "Approved"]:
+                flash("Trek once marked as open cannot be marked pending or approved.", "warning")
+                return redirect(url_for("edit_trek", trek_id=trek_id))
+            
+            if trek.status in ["Pending", "Approved"] and status == "Closed":
+                flash("Pending and approved treks cannot be marked as closed without opening them.", "warning")
+                return redirect(url_for("edit_trek", trek_id=trek_id))
+                
             if image and image.filename:
                 if trek.image:
                     old_image = os.path.join(app.config["UPLOAD_FOLDER"], trek.image)
@@ -283,10 +309,6 @@ def admin_routes(app):
                 image.save(os.path.join(app.config["UPLOAD_FOLDER"], image_name))
                 trek.image = image_name
 
-            if trek.status != "Completed" and status == "Completed":
-                bookings = Booking.query.filter_by(trek_id=trek_id, booking_status="Booked").all()
-                for booking in bookings:
-                    booking.booking_status = "Completed"
                 
             trek.trek_name = trek_name
             trek.location = location
@@ -295,9 +317,15 @@ def admin_routes(app):
             trek.available_slots = available_slots
             trek.start_date = start_date
             trek.end_date = end_date
-            trek.status = status
             trek.description = description
             trek.manager = manager
+
+            if trek.status != "Completed" and status == "Completed":
+                bookings = Booking.query.filter_by(trek_id=trek_id, booking_status="Booked").all()
+                for booking in bookings:
+                    booking.booking_status = "Completed"
+            
+            trek.status = status
 
             db.session.commit()
             flash("Trek updated successfully!", "success")
@@ -542,14 +570,24 @@ def admin_routes(app):
             if search.isdigit():
                 query = query.filter(Booking.booking_id == int(search))
             else:
-                query = query.join(User).join(Trek).filter(or_(
-                    User.name.ilike(f"%{search}%"),
-                    User.email.ilike(f"%{search}%"),
-                    Trek.trek_name.ilike(f"%{search}%"),
-                    Trek.location.ilike(f"%{search}%")
+                # query = query.join(User).filter(or_(
+                #     User.name.ilike(f"%{search}%"),
+                #     User.email.ilike(f"%{search}%")
+                # ))
+
+                # query = query.join(Trek).filter(or_(
+                #     Trek.trek_name.ilike(f"%{search}%"),
+                #     Trek.location.ilike(f"%{search}%")
+                # ))
+
+                query = query.filter(or_(
+                    Booking.user.has(User.name.ilike(f"%{search}%")),
+                    Booking.user.has(User.email.ilike(f"%{search}%")),
+                    Booking.trek.has(Trek.trek_name.ilike(f"%{search}%")),
+                    Booking.trek.has(Trek.location.ilike(f"%{search}%"))
                 ))
 
-        bookings = query.order_by(Booking.booking_date.desc()).all()
+        bookings = query.order_by(Booking.booking_date.desc(), Booking.booking_id.desc()).all()
         all_bookings = Booking.query.count()
         booked = Booking.query.filter_by(booking_status="Booked").count()
         cancelled = Booking.query.filter_by(booking_status="Cancelled").count()

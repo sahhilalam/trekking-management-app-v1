@@ -38,10 +38,7 @@ Trek detail
 
         <label for="staff">Guide</label>
         <input type="text" name="staff" id="staff" class="form-control"
-            value="{% if trek.manager %}{{ trek.manager.name }} ({{ trek.manager.email }})
-                   {% else %}
-                   Not Assigned
-                   {% endif %}" disabled>
+            value="{% if trek.manager %}{{ trek.manager.name }} ({{ trek.manager.email }}){% else %}Not Assigned{% endif %}" disabled>
 
         <label for="difficulty">Difficulty</label>
         <input type="text" name="difficulty" id="difficulty" class="form-control" value="{{ trek.difficulty }}"

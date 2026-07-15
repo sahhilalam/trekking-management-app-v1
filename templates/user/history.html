@@ -24,7 +24,7 @@ Trek History
 
 <div class="trek-search">
 <form action="{{ url_for('trek_history') }}" method="get" class="search-form">
-    <input type="text" name="search" class="form-control search-bar" placeholder="Search by name, location, difficulty" value="{{ request.args.get('search', '') }}">
+    <input type="text" name="search" class="form-control search-bar" placeholder="Search by ID, name, location, difficulty" value="{{ request.args.get('search', '') }}">
     <button type="submit" class="search-btn">Search</button>
 </form>
 </div>
@@ -41,6 +41,7 @@ Trek History
                 <th>Guide</th>
                 <th style="text-align: center;">Duration <br> (in days)</th>
                 <th style="text-align: center;">Booking Date <br> (YYYY-MM-DD)</th>
+                <th>Booking ID</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -61,12 +62,13 @@ Trek History
                 <td>{{ booking.trek.manager.name }} ({{ booking.trek.manager.email }})</td>
                 <td>{{ booking.trek.duration }}</td>
                 <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_id }}</td>
                 <td>{{ booking.trek.status }}</td>
             </tr>
             {% endfor %}
             {% else %}
             <tr>
-                <td colspan="8" style="text-align:center;">No trekking history found.</td>
+                <td colspan="9" style="text-align:center;">No trekking history found.</td>
             </tr>
             {% endif %}
         </tbody>
